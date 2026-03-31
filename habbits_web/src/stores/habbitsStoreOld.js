@@ -28,7 +28,7 @@ const habbitsList = ref([
 
     const allHabbits = computed(() => habbitsList.value)
 
-    const addHabit = (title, desc) => {
+    const addHabbit = (title, desc) => {
         habbitsList.value.push({
         id: Date.now(), // Генерируем уникальный ID
         title,
@@ -37,5 +37,5 @@ const habbitsList = ref([
     }
 
 
-    return {habbitsList, allHabbits, addHabit}
+    return {habbitsList, allHabbits, addHabbit}
 })

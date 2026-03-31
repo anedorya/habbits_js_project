@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import axios from "axios";
 
-const API_URL = 'http://localhost:3000/habbits';
+const API_URL = '/habbits';
 
 export const useHabbitsStore = defineStore('habbits', () => {
   const habbitsList = ref([]);

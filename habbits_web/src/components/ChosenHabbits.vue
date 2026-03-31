@@ -11,9 +11,15 @@
     </div>
 </template>
 
+
 <script setup>
+import { onMounted } from 'vue';
 import { usechosenHabbitsStore } from '../stores/chosenHabbitsStore';
 const chosenHabbitsStore = usechosenHabbitsStore();
+
+onMounted(() => {
+    chosenHabbitsStore.fetchChosenHabbits();
+});
 
 </script>
 

@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { HabbitsModule } from './habbits/habbits.module';
+import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 
@@ -23,6 +24,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       logging: process.env.LOG_TO_CONSOLE === 'true',
     }),
     HabbitsModule,
+    UsersModule,
     
   ],
   controllers: [AppController],
