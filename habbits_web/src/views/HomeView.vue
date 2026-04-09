@@ -7,9 +7,9 @@ import ChosenHabbits from '../components/ChosenHabbits.vue'
 <template>
   <main>
     <div >
-      <p>!!!! </p>
-      <CatalogHabbits />
       <ChosenHabbits />
+      <CatalogHabbits />
+
     </div>
   </main>
 </template>

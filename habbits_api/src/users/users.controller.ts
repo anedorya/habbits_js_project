@@ -4,6 +4,7 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { GetUsersQueryDto } from './dto/get-users-query.dto';
+import { SyncHabbitCalendarDto } from './dto/sync-habbit-calendar.dto';
 
 
 @Controller('users')
@@ -58,4 +59,27 @@ export class UsersController {
     return await this.usersService.removeHabbitFromUser(userId, habbitId);
   }
 
+  @Post(':id/habbits/:habbitId/sync')
+  async syncToCalendar(
+    @Param('id') userId: number,
+    @Param('habbitId') habbitId: number,
+    @Body() syncDto: SyncHabbitCalendarDto,
+  ) {
+    return await this.usersService.syncHabbitToGoogleCalendar(
+      userId,
+      habbitId,
+      syncDto.startTime,
+    );
+  }
+
+
+//   @Get(':id/calendar-status')
+// async getCalendarStatus(@Param('id') userId: number) {
+//   const user = await this.usersService.findOne(userId);
+//   return {
+//     isConnected: !!user.googleRefreshToken, // true, если календарь подключен
+//   };
+// }
+
 }
+

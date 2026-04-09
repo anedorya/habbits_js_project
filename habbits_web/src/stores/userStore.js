@@ -2,16 +2,29 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
 export const useUserStore = defineStore('user', () => {
-    // В реальном приложении здесь будет null, пока юзер не залогинится
+
+    const API_URL = import.meta.env.VITE_API_URL;
+
     const currentUser = ref({
-        id: 10, // Тот самый ID, который мы видели в ошибке
+        id: 1, 
         name: 'Default User',
-        email: 'main@example.com'
+        email: 'main@example.com',
+        isGoogleConnected: false
     });
 
     const setUser = (user) => {
         currentUser.value = user;
     };
 
-    return { currentUser, setUser };
+    const checkGoogleStatus = async () => {
+        try {
+            const response = await fetch(`${API_URL}/google-calendar/status/${currentUser.value.id}`);
+            const data = await response.json();
+            currentUser.value.isGoogleConnected = data.isConnected;
+        } catch (e) {
+            console.error("Ошибка при проверке статуса Google", e);
+        }
+    };
+
+    return { currentUser, setUser, checkGoogleStatus };
 });

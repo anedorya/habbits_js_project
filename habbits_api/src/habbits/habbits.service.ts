@@ -1,7 +1,7 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Habbit } from './entities/habbit.entity';
+import { Habbits } from './entities/habbit.entity';
 
 import { CreateHabbitDto } from './dto/create-habbit.dto';
 import { UpdateHabbitDto } from './dto/update-habbit.dto';
@@ -13,8 +13,8 @@ import { NotFoundException } from '@nestjs/common';
 @Injectable()
 export class HabbitsService implements OnModuleInit {
   constructor(
-    @InjectRepository(Habbit)
-    private readonly habbitRepository: Repository<Habbit>, 
+    @InjectRepository(Habbits)
+    private readonly habbitRepository: Repository<Habbits>, 
   ) {}
 
     async onModuleInit() {
@@ -69,7 +69,7 @@ export class HabbitsService implements OnModuleInit {
     }
   }
 
-  async create(createHabbitDto: CreateHabbitDto) {
+async create(createHabbitDto: CreateHabbitDto) {
     const newHabbit = this.habbitRepository.create(createHabbitDto);
     return await this.habbitRepository.save(newHabbit);
   }

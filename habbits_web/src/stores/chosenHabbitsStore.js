@@ -13,7 +13,6 @@ export const usechosenHabbitsStore = defineStore('chosenHabbits', () => {
         const userId = userStore.currentUser?.id;
 
         try {
-            // const response = await axios.post(`API_URL/${userId}/habbits/${habbit.id}`);
             const response = await axios.post(`/users/${userId}/habbits/${habbit.id}`);
 
             const isAlreadyChosen = habbitItems.value.some(item => item.id === habbit.id);

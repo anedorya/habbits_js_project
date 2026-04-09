@@ -1,10 +1,10 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn,
   ManyToMany
  } from 'typeorm';
-import { User } from 'src/users/entities/user.entity';
+import { Users } from 'src/users/entities/user.entity';
 
 @Entity() 
-export class Habbit {
+export class Habbits {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -20,6 +20,6 @@ export class Habbit {
   @CreateDateColumn()
   createdAt: Date;
 
-  @ManyToMany(() => User, (user) => user.habbits)
-  users: User[];
+  @ManyToMany(() => Users, (user) => user.habbits)
+  users: Users[];
 }

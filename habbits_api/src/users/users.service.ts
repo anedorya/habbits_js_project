@@ -1,25 +1,28 @@
-import { Injectable, OnModuleInit, ConflictException  } from '@nestjs/common';
+import { Injectable, OnModuleInit, ConflictException, BadRequestException  } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Not } from 'typeorm';
-import { User } from './entities/user.entity';
-import { Habbit } from 'src/habbits/entities/habbit.entity';
+import { Users } from './entities/user.entity';
+import { Habbits } from 'src/habbits/entities/habbit.entity';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { GetUsersQueryDto } from './dto/get-users-query.dto';
 
 import { NotFoundException } from '@nestjs/common';
-
+import { GoogleCalendarService } from 'src/google-calendar/google-calendar.service';
 
 @Injectable()
 export class UsersService implements OnModuleInit {
   private readonly saltRounds = 10;
   constructor(
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>, 
+    @InjectRepository(Users)
+    private readonly userRepository: Repository<Users>, 
 
-    @InjectRepository(Habbit) // Нужно добавить HabbitRepository
-    private readonly habbitRepository: Repository<Habbit>,
+    @InjectRepository(Habbits) // !!!! Нужно добавить HabbitRepository
+    private readonly habbitRepository: Repository<Habbits>,
+
+    private readonly calendarService: GoogleCalendarService,
+
   ) {}
 
     async onModuleInit() {
@@ -29,7 +32,7 @@ export class UsersService implements OnModuleInit {
       const hashedPassword = await bcrypt.hash('qwerty', this.saltRounds);
       const defaultUsers = [
     { 
-        email: 'main@example.com',
+        email: 'default_user@example.com',
         password: hashedPassword,
         name: 'Default user'
       },
@@ -186,6 +189,32 @@ async removeHabbitFromUser(userId: number, habbitId: number) {
   }
 
   return user;
+}
+
+
+async syncHabbitToGoogleCalendar(userId: number, habbitId: number, startTime: string) {
+  // 1. Находим пользователя и проверяем наличие токенов
+  const user = await this.userRepository.findOneBy({ id: userId });
+  if (!user) throw new NotFoundException('Пользователь не найден');
+
+  if (!user.googleAccessToken || !user.googleRefreshToken) {
+    // Выбрасываем 400 Bad Request с понятным сообщением
+    throw new BadRequestException('Google Calendar не подключен. Пожалуйста, пройдите авторизацию.');
+  }
+
+  // 2. Проверяем существование привычки
+  const habbit = await this.habbitRepository.findOneBy({ id: habbitId });
+  if (!habbit) throw new NotFoundException(`Привычка с ID ${habbitId} не найдена`);
+
+  // 3. Вызываем сервис календаря
+  try {
+    const date = new Date(startTime);
+    await this.calendarService.addHabbitToCalendar(userId, habbit.name, date);
+    return { success: true, message: 'Событие успешно добавлено в Google Calendar' };
+  } catch (error) {
+    // Если ошибка от самого Google (например, токен отозван)
+    throw new BadRequestException('Ошибка Google API: ' + error.message);
+  }
 }
 
 }
