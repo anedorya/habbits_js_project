@@ -1,7 +1,6 @@
 <template>
     <header class='header' :class="themeStore.isDarkMode ? 'header-dark' : ''" >
 
-        <h2>Трекер привычек</h2>
     </header>
 </template>
 

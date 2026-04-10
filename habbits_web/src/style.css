@@ -1,4 +1,6 @@
-:root {
+@import "tailwindcss";
+
+/* :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -98,4 +100,4 @@ nav a {
 nav a:first-of-type {
   border: 0;
 }
-}
+} */

@@ -1,28 +1,79 @@
 <template>
-    <div >
-        <div v-if="store.loading">Загрузка...</div>
-        <div v-else-if="store.currentHabbit" class="card">
-            <h3>Название: {{ store.currentHabbit.name }}</h3>
-            <p>Описание: {{ store.currentHabbit.desc }}</p>
+    <div class="max-w-3xl mx-auto py-8 px-4">
 
-        <div v-if="userStore.currentUser.isGoogleConnected" class="time-picker-section">
-                    <label for="habit-time">Выберите время для напоминания:</label>
-                    <input 
-                        type="time" 
-                        id="habbit-time" 
-                        v-model="selectedTime" 
-                        class="time-input"
-                    />
-                    <button @click="addToCalendar" class="calendar-add-btn">
-                        ⏰ Установить в календарь
-                    </button>
-                </div>
+        <button @click="$router.back()" class="mb-6 flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-indigo-600 transition-colors">
+        ← Назад
+        </button>
 
-
+        <div v-if="store.loading" class="flex flex-col items-center justify-center py-20 bg-white rounded-3xl border border-gray-100 shadow-sm">
+            Загрузка...
 
         </div>
-        <div v-else>Привычка не найдена</div>
+    <div v-else-if="store.currentHabbit" class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+      <!-- Верхняя часть с названием -->
+      <div class="p-8 border-b border-gray-50 bg-gradient-to-r from-white to-indigo-50/30">
+        <div class="inline-block px-3 py-1 bg-indigo-100 text-indigo-700 text-xs font-bold uppercase tracking-wider rounded-full mb-4">
+          Детали привычки
+        </div>
+        <h3 class="text-3xl font-extrabold text-gray-900 leading-tight">
+          {{ store.currentHabbit.name }}
+        </h3>
+      </div>
+
+    <div class="p-8">
+        <h4 class="text-sm font-semibold text-gray-400 uppercase tracking-widest mb-3">Описание</h4>
+        <p class="text-lg text-gray-600 leading-relaxed italic">
+          « {{ store.currentHabbit.desc }} »
+        </p>
     </div>
+
+      <!-- Секция Google Календаря -->
+      <div class="p-8 bg-gray-50/50 border-t border-gray-100">
+        <div v-if="userStore.currentUser.isGoogleConnected" class="space-y-6">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div class="space-y-1">
+              <h4 class="font-bold text-gray-800 flex items-center gap-2">
+                📅 Google Календарь
+              </h4>
+              <p class="text-sm text-gray-500">Выберите время для ежедневного напоминания</p>
+            </div>
+            
+            <div class="flex items-center gap-3">
+              <input 
+                type="time" 
+                id="habbit-time" 
+                v-model="selectedTime" 
+                class="px-4 py-2.5 rounded-xl border border-gray-200 bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all font-medium text-gray-700"
+              />
+              <button 
+                @click="addToCalendar" 
+                class="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-xl font-bold transition-all shadow-lg shadow-indigo-100 active:scale-95"
+              >
+                <span>⏰</span> Установить
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Если Google не подключен -->
+        <div v-else class="text-center py-4">
+          <p class="text-gray-600 mb-4">Подключите календарь, чтобы не пропускать занятия</p>
+          <button 
+            @click="connectGoogle"
+            class="inline-flex items-center gap-2 px-6 py-3 border border-gray-300 rounded-xl bg-white hover:bg-gray-50 text-gray-700 font-semibold transition-all shadow-sm"
+          >
+            <img src="https://google.com" class="w-4 h-4" alt="Google" />
+            Подключить Google Календарь
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div v-else class="text-center py-20 bg-white rounded-3xl border border-dashed border-gray-300">
+      <p class="text-xl text-gray-400 font-medium">Привычка не найдена 😕</p>
+      <RouterLink to="/" class="mt-4 inline-block text-indigo-600 font-semibold hover:underline">Вернуться на главную</RouterLink>
+    </div>
+  </div>
 </template>
 
 <script setup>
