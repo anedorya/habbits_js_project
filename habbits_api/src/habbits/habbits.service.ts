@@ -1,13 +1,12 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable, OnModuleInit, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+
 import { Habbits } from './entities/habbit.entity';
 
 import { CreateHabbitDto } from './dto/create-habbit.dto';
 import { UpdateHabbitDto } from './dto/update-habbit.dto';
 import { GetHabbitsQueryDto } from './dto/get-habbits-query.dto';
-
-import { NotFoundException } from '@nestjs/common';
 
 
 @Injectable()
@@ -105,14 +104,6 @@ async findAll(query: GetHabbitsQueryDto) {
   };
 }
 
-  // async findAll() {
-  //   return await this.habbitRepository.find();
-  // }
-
-  // async findOne(id: number) {
-  //   return await this.habbitRepository.findOneBy({ id });
-  // }
-
 async findOne(id: number) {
   const habbit = await this.habbitRepository.findOneBy({ id });
   if (!habbit) {
@@ -122,23 +113,19 @@ async findOne(id: number) {
 }
 
   async update(id: number, updateHabbitDto: UpdateHabbitDto) {
-  const habbit = await this.habbitRepository.preload({
-    id: id,
-    ...updateHabbitDto,
-  });
-
-  if (!habbit) {
-    throw new NotFoundException(`Habbit #${id} not found`);
+    if (id >= 1 && id <= 10) {
+    throw new BadRequestException('Вы пытаетесь изменить базовую привычку');
   }
-  
-  return this.habbitRepository.save(habbit);
-}
+    const habbit = await this.findOne(id);
+    const updatedHabbit = this.habbitRepository.merge(habbit, updateHabbitDto);
+    return this.habbitRepository.save(updatedHabbit);
+  }
 
   async remove(id: number) {
-  const habbit = await this.findOne(id); 
-  if (!habbit) {
-    throw new NotFoundException(`Habbit #${id} not found`);
+    if (id >= 1 && id <= 10) {
+    throw new BadRequestException('Вы пытаетесь удалить базовую привычку');
   }
-  return this.habbitRepository.remove(habbit);
-}
+    await this.findOne(id); 
+    return await this.habbitRepository.delete(id);
+  }
 }

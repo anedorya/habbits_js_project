@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn,
-  ManyToMany, JoinTable
+  ManyToMany, JoinTable, 
  } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import { Habbits } from 'src/habbits/entities/habbit.entity';
@@ -7,37 +7,51 @@ import { Habbits } from 'src/habbits/entities/habbit.entity';
 @Entity() 
 export class Users {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column({ unique: true })
-  email: string;
+  email!: string;
 
   @Exclude({ toPlainOnly: true })
   @Column()
-  password: string;
+  password!: string;
 
   @Column()
-  name: string;
+  name!: string;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
-  @ManyToMany(() => Habbits)
-  @JoinTable({ name: 'users_habbits' }) 
-  habbits: Habbits[];
+  @ManyToMany(() => Habbits, (habbit) => habbit.users, {
+    onDelete: 'CASCADE',
+  })
+  @JoinTable({ 
+    name: 'users_habbits',
+    joinColumn: 
+      {
+      name: 'userId', 
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: 
+      { 
+      name: 'habbitId', 
+      referencedColumnName: 'id'}
+    
+  }) 
+  habbits!: Habbits[];
 
 
   @Exclude({ toPlainOnly: true })
   @Column({ nullable: true })
-  googleAccessToken: string;
+  googleAccessToken!: string;
 
   @Exclude({ toPlainOnly: true })
   @Column({ nullable: true })
-  googleRefreshToken: string;
+  googleRefreshToken!: string;
 
   @Exclude({ toPlainOnly: true })
   @Column({ type: 'bigint', nullable: true })
-  googleTokenExpiry: number;
+  googleTokenExpiry!: number;
 
 
 }

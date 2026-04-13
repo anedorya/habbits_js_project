@@ -11,6 +11,8 @@ export const useHabbitsStore = defineStore('habbits', () => {
 
   const allHabbits = computed(() => habbitsList.value);
   const currentHabbit = ref(null);
+  const isBaseHabbit = (id) => id >= 1 && id <= 10;
+
 
   const fetchHabbits = async () => {
     loading.value = true;
@@ -55,14 +57,34 @@ const fetchHabbitById = async (id) => {
     }
   };
 
-//   const deleteHabbit = async (id) => {
-//     try {
-//       await axios.delete(`${API_URL}/${id}`);
-//       habbitsList.value = habbitsList.value.filter(h => h.id !== id);
-//     } catch (error) {
-//       console.error('Ошибка удаления:', error);
-//     }
-//   };
+  const deleteHabbit = async (id) => {
+    if (isBaseHabbit(id)) {
+      alert("Вы пытаетесь удалить базовую привычку");
+      return;
+    }
+    try {
+      await axios.delete(`${API_URL}/${id}`);
+      habbitsList.value = habbitsList.value.filter(h => h.id !== id);
+    } catch (error) {
+      console.error('Ошибка удаления:', error);
+    }
+  };
+
+
+  const updateHabbit = async (id, updatedData) => {
+    if (isBaseHabbit(id)) {
+      alert("Вы пытаетесь изменить базовую привычку");
+      return;
+    }
+
+    try {
+      const response = await axios.patch(`${API_URL}/${id}`, updatedData);
+      const index = habbitsList.value.findIndex(h => h.id === id);
+      if (index !== -1) habbitsList.value[index] = response.data;
+    } catch (error) {
+      console.error('Ошибка удаления:', error);
+    }
+  };
 
   return { 
     habbitsList, 
@@ -70,8 +92,11 @@ const fetchHabbitById = async (id) => {
     allHabbits, 
     loading, 
     fetchHabbits, 
+    fetchHabbitById,
     addHabbit, 
-    currentHabbit, 
-    fetchHabbitById
+    deleteHabbit,
+    updateHabbit,
+    currentHabbit,
+    isBaseHabbit, 
   };
 });

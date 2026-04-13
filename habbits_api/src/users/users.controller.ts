@@ -73,13 +73,6 @@ export class UsersController {
   }
 
 
-//   @Get(':id/calendar-status')
-// async getCalendarStatus(@Param('id') userId: number) {
-//   const user = await this.usersService.findOne(userId);
-//   return {
-//     isConnected: !!user.googleRefreshToken, // true, если календарь подключен
-//   };
-// }
 
 }
 

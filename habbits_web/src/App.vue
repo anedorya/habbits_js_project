@@ -9,13 +9,16 @@ import { RouterLink, RouterView } from 'vue-router'
     <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm">
       <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
         
+        
         <div class="flex items-center gap-2">
+          <RouterLink to="/" class="flex items-center gap-2 group hover:opacity-90 transition-opacity">
           <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center shadow-indigo-200 shadow-lg">
             <span class="text-white font-bold text-xl">✓</span>
           </div>
           <h2 class="text-xl font-extrabold tracking-tight text-gray-800">
             Трекер привычек
           </h2>
+          </RouterLink>
         </div>
 
         <nav class="flex items-center gap-1">

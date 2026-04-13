@@ -5,18 +5,27 @@
             Выбранные привычки
         </h2>
 
-        <p v-if="chosenHabbitsStore.habbitItems.length === 0" class="text-gray-500 italic">
+        <p v-if="chosenHabbitsStore.chosenHabbits.length === 0" class="text-gray-500 italic">
             Вы пока ничего не выбрали. Посмотрите привычки в каталоге ниже или добавьте свою привычку.
         </p>
         
         <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div 
-                v-for="elemCart in chosenHabbitsStore.habbitItems" 
+                v-for="elemCart in chosenHabbitsStore.chosenHabbits" 
                 :key="elemCart.id"
-                class="bg-white p-6 rounded-2xl shadow-sm border border-white hover:shadow-md transition-all duration-300"
+                class="border border-gray-200 rounded-2xl hover:border-indigo-300 transition-colors bg-white shadow-sm flex flex-col h-full overflow-hidden"
+            >
+                <RouterLink 
+                    :to="{ name: 'Habbits', params: { id: elemCart.id } }"
+                    class="p-5 flex-grow block hover:bg-gray-50/50 transition-colors"
                 >
-                <h3 class="text-lg font-bold text-gray-900 mb-2 leading-tight">{{elemCart.name}}</h3>
-                <p class="text-gray-600 text-sm leading-relaxed"> {{elemCart.desc }} </p>
+                    <h3 class="text-lg font-bold text-gray-900 mb-2 leading-tight hover:text-indigo-600 transition-colors">
+                        {{ elemCart.name }}
+                    </h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">
+                        {{ elemCart.desc }}
+                    </p>
+                </RouterLink>
             </div>
         </div>
     </section>

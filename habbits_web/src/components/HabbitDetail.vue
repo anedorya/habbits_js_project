@@ -67,6 +67,32 @@
           </button>
         </div>
       </div>
+
+
+      <!-- Секция управления (Удалить/Редактировать) -->
+      <div class="p-8 border-t border-gray-100 flex flex-col sm:flex-row gap-4">
+        <button 
+            @click="handleUnchoose" 
+            class="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-bold transition-all bg-orange-50 text-orange-600 hover:bg-orange-100 active:scale-95"
+        >
+            <span>🚫</span> Перестать отслеживать
+        </button>
+
+        <button 
+          @click="handleDelete" 
+          :disabled="store.isBaseHabbit(store.currentHabbit.id)"
+          :class="[
+            'flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-bold transition-all',
+            store.isBaseHabbit(store.currentHabbit.id) 
+              ? 'bg-gray-50 text-gray-300 cursor-not-allowed' 
+              : 'bg-red-50 text-red-600 hover:bg-red-100 active:scale-95'
+          ]"
+          :title="store.isBaseHabbit(store.currentHabbit.id) ? 'Эту привычку нельзя удалить' : ''"
+        >
+          <span>🗑️</span> Удалить привычку
+        </button>
+      </div>
+
     </div>
 
     <div v-else class="text-center py-20 bg-white rounded-3xl border border-dashed border-gray-300">
@@ -79,15 +105,37 @@
 <script setup>
 
 import { onMounted, ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useHabbitsStore } from '../stores/habbitsStore';
 import { useUserStore } from '../stores/userStore'; 
+import { usechosenHabbitsStore } from '../stores/chosenHabbitsStore';
+
 
 const route = useRoute();
+const router = useRouter();
 const store = useHabbitsStore();
 const userStore = useUserStore();
+const chosenHabbitsStore = usechosenHabbitsStore();
 const API_URL = import.meta.env.VITE_API_URL;
 const selectedTime = ref('');
+
+const handleUnchoose = async () => {
+  if (confirm('Вы уверены, что хотите убрать эту привычку из своего списка?')) {
+    const userId = userStore.currentUser.id;
+    const habbitId = store.currentHabbit.id;
+    
+    await chosenHabbitsStore.unchooseHabbit(userId, habbitId);
+    router.push('/'); 
+  }
+};
+
+const handleDelete = async () => {
+    if (confirm('Вы уверены, что хотите удалить эту привычку?')) {
+        await store.deleteHabbit(store.currentHabbit.id);
+        // Если в сторе нет ошибки (удаление прошло успешно), возвращаемся назад
+        router.push('/');
+    }
+};
 
 const connectGoogle = () => {
     const habbitId = route.params.id;

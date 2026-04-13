@@ -1,25 +1,27 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn,
   ManyToMany
  } from 'typeorm';
-import { Users } from 'src/users/entities/user.entity';
+import { Users } from '../../users/entities/user.entity';
 
 @Entity() 
 export class Habbits {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column()
-  name: string;
+  name!: string;
 
   @Column({ nullable: true })
-  desc: string;
+  desc!: string;
 
   @Column({ default: false })
-  isCompleted: boolean;
+  isCompleted!: boolean;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
-  @ManyToMany(() => Users, (user) => user.habbits)
-  users: Users[];
+  @ManyToMany(() => Users, (user) => user.habbits, {
+    onDelete: 'CASCADE',
+  })
+  users!: Users[];
 }

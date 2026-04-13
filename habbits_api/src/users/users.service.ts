@@ -18,9 +18,8 @@ export class UsersService implements OnModuleInit {
     @InjectRepository(Users)
     private readonly userRepository: Repository<Users>, 
 
-    @InjectRepository(Habbits) // !!!! Нужно добавить HabbitRepository
+    @InjectRepository(Habbits)
     private readonly habbitRepository: Repository<Habbits>,
-
     private readonly calendarService: GoogleCalendarService,
 
   ) {}
