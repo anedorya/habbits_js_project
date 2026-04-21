@@ -1,4 +1,4 @@
-# Habits API (NestJS + PostgreSQL)
+# Habbits API (NestJS + PostgreSQL)
 
 Простое REST API для управления привычками, построенное на NestJS и TypeORM.
 
@@ -27,7 +27,7 @@ npm run start:dev
 
 
 ### 5. Эндпоинты (API)
-Привычки (Habits)
+Привычки (Habbits)
 Метод	Путь	Описание
 GET	/habbits	Получить список с пагинацией и фильтром
 GET	/habbits/:id	Получить одну привычку по ID
