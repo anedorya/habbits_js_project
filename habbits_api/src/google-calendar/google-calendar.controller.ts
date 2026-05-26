@@ -1,10 +1,14 @@
 import { Controller, Get, Query, Res, Post, Body, Param, BadRequestException } from '@nestjs/common';
 import { GoogleCalendarService } from './google-calendar.service';
+import { ConfigService } from '@nestjs/config';
 import type { Response } from 'express';
 
 @Controller('google-calendar')
 export class GoogleCalendarController {
-  constructor(private readonly calendarService: GoogleCalendarService) {}
+  constructor(
+    private readonly calendarService: GoogleCalendarService,
+    private readonly configService: ConfigService,
+  ) {}
 
 
 @Get('auth/:userId')
@@ -72,9 +76,15 @@ async callback(
 
     await this.calendarService.saveTokens(Number(userId), code);
 
+    const apiUrl = this.configService.get('API_URL');
+
+    if (!apiUrl) {
+      throw new Error('API_URL environment variable is not defined');
+      }
+
     const redirectUrl = habbitId 
-    ? `http://localhost:5173/habbit/${habbitId}?google=success`
-    : `http://localhost:5173/?google=success`;
+      ? `${apiUrl}/habbit/${habbitId}?google=success`
+      : `${apiUrl}/?google=success`;
 
     res.redirect(redirectUrl);
 }
